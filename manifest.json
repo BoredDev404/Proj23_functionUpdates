@@ -1,7 +1,7 @@
 {
   "name": "Life Tracker Pro",
   "short_name": "LifeTrackerPro",
-  "description": "Supercharged personal growth and habit tracking with advanced analytics",
+  "description": "Supercharged personal growth and habit tracking",
   "start_url": "/Proj23_functionUpdates/",
   "display": "standalone",
   "background_color": "#0A0A0A",
@@ -10,26 +10,17 @@
   "scope": "/Proj23_functionUpdates/",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["health", "productivity", "lifestyle", "personal"],
-  "features": [
-    "Habit Tracking",
-    "Workout Logging",
-    "Mood Tracking",
-    "Progress Analytics",
-    "Email Reports",
-    "Data Visualization",
-    "Offline Functionality"
-  ]
+  "categories": ["health", "productivity", "lifestyle"]
 }
