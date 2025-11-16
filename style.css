@@ -296,6 +296,118 @@ body {
     border-bottom: none;
 }
 
+/* Database Page Styles */
+.database-table-container {
+    padding: 15px;
+}
+
+.database-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.entry-main {
+    flex: 1;
+}
+
+.entry-date {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.entry-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.entry-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-passed {
+    background: var(--ig-success);
+    color: white;
+}
+
+.status-failed {
+    background: var(--ig-danger);
+    color: white;
+}
+
+.status-warning {
+    background: var(--ig-warning);
+    color: black;
+}
+
+.entry-mood, .entry-type, .entry-desc, .entry-notes {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.entry-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    width: auto;
+}
+
+.btn-danger {
+    background: var(--ig-danger);
+    color: white;
+}
+
+.btn-danger:active {
+    background: #c13584;
+}
+
+/* Email Status Styles */
+.email-status {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.email-success {
+    background: rgba(0, 200, 81, 0.2);
+    color: var(--ig-success);
+    border: 1px solid var(--ig-success);
+}
+
+.email-error {
+    background: rgba(225, 48, 108, 0.2);
+    color: var(--ig-danger);
+    border: 1px solid var(--ig-danger);
+}
+
+/* Loading spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .habit-item::before {
     content: '';
     position: absolute;
