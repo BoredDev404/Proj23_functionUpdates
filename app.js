@@ -1636,74 +1636,242 @@ const LifeTrackerApp = {
     },
 
     // Database Page
-    async renderDatabasePage() {
-        const databaseEl = document.getElementById('database');
-        
-        const dopamineEntries = await db.dopamineEntries.toArray();
-        const hygieneHabits = await db.hygieneHabits.toArray();
-        const workoutHistory = await db.workoutHistory.toArray();
-        const moodEntries = await db.moodEntries.toArray();
+   // Database Page with Delete Functionality
+async renderDatabasePage() {
+    const databaseEl = document.getElementById('database');
+    
+    const dopamineEntries = await db.dopamineEntries.toArray();
+    const hygieneHabits = await db.hygieneHabits.toArray();
+    const workoutHistory = await db.workoutHistory.toArray();
+    const moodEntries = await db.moodEntries.toArray();
 
-        databaseEl.innerHTML = `
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Database Viewer</div>
-                </div>
-                
-                <div class="database-section">
-                    <h3>Dopamine Entries (${dopamineEntries.length})</h3>
-                    <div class="database-table-container">
-                        ${dopamineEntries.map(entry => `
-                            <div class="database-entry">
+    databaseEl.innerHTML = `
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Database Viewer</div>
+                <button class="btn btn-secondary" id="clearAllData">
+                    <i class="fas fa-trash"></i> Clear All Data
+                </button>
+            </div>
+            
+            <div class="database-section">
+                <h3>Dopamine Entries (${dopamineEntries.length})</h3>
+                <div class="database-table-container">
+                    ${dopamineEntries.length > 0 ? dopamineEntries.map(entry => `
+                        <div class="database-entry">
+                            <div class="entry-main">
                                 <div class="entry-date">${entry.date}</div>
-                                <div class="entry-status ${entry.status}">${entry.status}</div>
-                                <div class="entry-notes">${entry.notes || 'No notes'}</div>
+                                <div class="entry-status ${entry.status === 'passed' ? 'status-passed' : 'status-failed'}">
+                                    ${entry.status === 'passed' ? '✅ Successful' : '❌ Challenging'}
+                                </div>
                             </div>
-                        `).join('')}
-                    </div>
+                            <div class="entry-notes">${entry.notes || 'No notes'}</div>
+                            <div class="entry-actions">
+                                <button class="btn btn-small btn-secondary edit-entry" data-type="dopamine" data-id="${entry.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-small btn-danger delete-entry" data-type="dopamine" data-id="${entry.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('') : '<div class="empty-state">No dopamine entries</div>'}
                 </div>
+            </div>
 
-                <div class="database-section">
-                    <h3>Hygiene Habits (${hygieneHabits.length})</h3>
-                    <div class="database-table-container">
-                        ${hygieneHabits.map(habit => `
-                            <div class="database-entry">
+            <div class="database-section">
+                <h3>Hygiene Habits (${hygieneHabits.length})</h3>
+                <div class="database-table-container">
+                    ${hygieneHabits.length > 0 ? hygieneHabits.map(habit => `
+                        <div class="database-entry">
+                            <div class="entry-main">
                                 <div class="entry-name">${habit.name}</div>
                                 <div class="entry-desc">${habit.description}</div>
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="database-section">
-                    <h3>Workout History (${workoutHistory.length})</h3>
-                    <div class="database-table-container">
-                        ${workoutHistory.map(history => `
-                            <div class="database-entry">
-                                <div class="entry-date">${history.date}</div>
-                                <div class="entry-type">${history.type}</div>
+                            <div class="entry-actions">
+                                <button class="btn btn-small btn-danger delete-entry" data-type="hygiene" data-id="${habit.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="database-section">
-                    <h3>Mood Entries (${moodEntries.length})</h3>
-                    <div class="database-table-container">
-                        ${moodEntries.map(entry => `
-                            <div class="database-entry">
-                                <div class="entry-date">${entry.date}</div>
-                                <div class="entry-mood">Mood: ${entry.mood}/5</div>
-                                <div class="entry-energy">Energy: ${entry.energy}/5</div>
-                                <div class="entry-numb">Numb: ${entry.numb}/5</div>
-                            </div>
-                        `).join('')}
-                    </div>
+                        </div>
+                    `).join('') : '<div class="empty-state">No hygiene habits</div>'}
                 </div>
             </div>
-        `;
-    },
 
+            <div class="database-section">
+                <h3>Workout History (${workoutHistory.length})</h3>
+                <div class="database-table-container">
+                    ${workoutHistory.length > 0 ? workoutHistory.map(history => `
+                        <div class="database-entry">
+                            <div class="entry-main">
+                                <div class="entry-date">${history.date}</div>
+                                <div class="entry-type ${history.type === 'completed' ? 'status-passed' : history.type === 'rest' ? 'status-warning' : 'status-failed'}">
+                                    ${history.type === 'completed' ? '💪 Completed' : history.type === 'rest' ? '😴 Rest Day' : '❌ Missed'}
+                                </div>
+                            </div>
+                            <div class="entry-actions">
+                                <button class="btn btn-small btn-danger delete-entry" data-type="workout" data-id="${history.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('') : '<div class="empty-state">No workout history</div>'}
+                </div>
+            </div>
+
+            <div class="database-section">
+                <h3>Mood Entries (${moodEntries.length})</h3>
+                <div class="database-table-container">
+                    ${moodEntries.length > 0 ? moodEntries.map(entry => `
+                        <div class="database-entry">
+                            <div class="entry-main">
+                                <div class="entry-date">${entry.date}</div>
+                                <div class="entry-mood">
+                                    Mood: ${this.getMoodEmoji(entry.mood)} ${entry.mood}/5 | 
+                                    Energy: ${entry.energy}/5 | 
+                                    Numb: ${entry.numb}/5
+                                </div>
+                            </div>
+                            <div class="entry-notes">${entry.notes || 'No notes'}</div>
+                            <div class="entry-actions">
+                                <button class="btn btn-small btn-secondary edit-entry" data-type="mood" data-id="${entry.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-small btn-danger delete-entry" data-type="mood" data-id="${entry.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('') : '<div class="empty-state">No mood entries</div>'}
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add event listeners for delete buttons
+    databaseEl.querySelectorAll('.delete-entry').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const type = btn.getAttribute('data-type');
+            const id = parseInt(btn.getAttribute('data-id'));
+            this.deleteDatabaseEntry(type, id);
+        });
+    });
+
+    // Add event listeners for edit buttons
+    databaseEl.querySelectorAll('.edit-entry').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const type = btn.getAttribute('data-type');
+            const id = parseInt(btn.getAttribute('data-id'));
+            this.editDatabaseEntry(type, id);
+        });
+    });
+
+    // Clear all data button
+    const clearAllBtn = document.getElementById('clearAllData');
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', () => {
+            this.clearAllData();
+        });
+    }
+},
+
+async deleteDatabaseEntry(type, id) {
+    if (!confirm('Are you sure you want to delete this entry?')) {
+        return;
+    }
+
+    try {
+        switch (type) {
+            case 'dopamine':
+                await db.dopamineEntries.delete(id);
+                break;
+            case 'hygiene':
+                await db.hygieneHabits.delete(id);
+                // Also delete related completions
+                await db.hygieneCompletions.where('habitId').equals(id).delete();
+                break;
+            case 'workout':
+                await db.workoutHistory.delete(id);
+                break;
+            case 'mood':
+                await db.moodEntries.delete(id);
+                break;
+        }
+
+        // Re-render the database page
+        this.renderDatabasePage();
+        
+        // Also update other pages if needed
+        this.renderDashboard();
+        if (type === 'dopamine') this.renderDopaminePage();
+        if (type === 'hygiene') this.renderHygienePage();
+        if (type === 'workout') this.renderWorkoutPage();
+        if (type === 'mood') this.renderMoodPage();
+
+        alert('Entry deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting entry:', error);
+        alert('Error deleting entry. Please try again.');
+    }
+},
+
+async editDatabaseEntry(type, id) {
+    switch (type) {
+        case 'dopamine':
+            const dopamineEntry = await db.dopamineEntries.get(id);
+            if (dopamineEntry) {
+                this.showDopamineModal(dopamineEntry);
+            }
+            break;
+        case 'mood':
+            const moodEntry = await db.moodEntries.get(id);
+            if (moodEntry) {
+                this.showMoodModal(moodEntry);
+            }
+            break;
+        default:
+            alert('Editing not supported for this entry type');
+    }
+},
+
+async clearAllData() {
+    if (!confirm('⚠️ DANGER: This will delete ALL your data permanently! Are you absolutely sure?')) {
+        return;
+    }
+
+    if (!confirm('❌ This action cannot be undone! All your habits, progress, and history will be lost. Confirm deletion?')) {
+        return;
+    }
+
+    try {
+        // Clear all database tables
+        await Promise.all([
+            db.dopamineEntries.clear(),
+            db.hygieneHabits.clear(),
+            db.hygieneCompletions.clear(),
+            db.workoutTemplates.clear(),
+            db.workoutExercises.clear(),
+            db.workoutHistory.clear(),
+            db.moodEntries.clear(),
+            db.dailyCompletion.clear(),
+            db.focusSessions.clear()
+        ]);
+
+        // Clear localStorage
+        localStorage.clear();
+
+        // Re-initialize default data
+        await this.initializeDefaultData();
+
+        // Re-render all pages
+        this.renderAllPages();
+
+        alert('All data cleared successfully! The app has been reset to default settings.');
+    } catch (error) {
+        console.error('Error clearing data:', error);
+        alert('Error clearing data. Please try again.');
+    }
+},
     // Email Automation
     async setupEmailAutomation() {
         // Check if we need to send today's report
