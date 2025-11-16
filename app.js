@@ -1979,7 +1979,7 @@ async sendEmail(stats, recipient) {
         // Replace 'YOUR_TEMPLATE_ID' with the actual template ID from EmailJS dashboard
         const response = await emailjs.send(
             'service_c3ur38h', 
-            'YOUR_TEMPLATE_ID', // ← Replace this with your actual template ID
+            'template_jgtfg7q', // ← Replace this with your actual template ID
             templateParams
         );
         
