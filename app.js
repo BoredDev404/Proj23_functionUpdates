@@ -1956,50 +1956,63 @@ async clearAllData() {
     },
 
     // Fixed Email Sending with Proper Template
+// Fixed Email Methods
 async sendEmail(stats, recipient) {
-    // Prepare template parameters
+    // First, let's check if EmailJS is properly initialized
+    if (!window.emailjs) {
+        throw new Error('Email service not loaded. Please check your internet connection.');
+    }
+
+    // Prepare template parameters for plain text email (better for Google Sheets)
     const templateParams = {
         to_email: recipient,
         date: stats.date,
-        overall_completion: stats.overallCompletion,
-        overall_completion_class: stats.overallCompletion >= 80 ? 'good' : 'bad',
-        dopamine_status: stats.dopamine ? stats.dopamine.status : 'Not logged',
+        overall_completion: `${stats.overallCompletion}%`,
+        dopamine_status: stats.dopamine ? (stats.dopamine.status === 'passed' ? 'Successful' : 'Challenging') : 'Not logged',
         workout_status: stats.workout ? stats.workout.type : 'Not logged',
-        hygiene_completion: stats.hygiene.completion,
-        focus_sessions: stats.focus.sessions,
-        focus_duration: stats.focus.totalDuration,
-        mood_section: stats.mood ? `
-            <tr><td>Mood</td><td>${stats.mood.mood}/5</td></tr>
-            <tr><td>Energy</td><td>${stats.mood.energy}/5</td></tr>
-            <tr><td>Numbness</td><td>${stats.mood.numb}/5</td></tr>
-        ` : ''
+        hygiene_completion: `${stats.hygiene.completion}%`,
+        focus_sessions: stats.focus.sessions.toString(),
+        focus_duration: `${stats.focus.totalDuration} minutes`,
+        mood_level: stats.mood ? stats.mood.mood.toString() : 'N/A',
+        energy_level: stats.mood ? stats.mood.energy.toString() : 'N/A',
+        numbness_level: stats.mood ? stats.mood.numb.toString() : 'N/A',
+        report_date: new Date().toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        })
     };
 
     try {
-        // Replace 'YOUR_TEMPLATE_ID' with the actual template ID from EmailJS dashboard
-        const response = await emailjs.send(
-            'service_c3ur38h', 
-            'template_jgtfg7q', // ← Replace this with your actual template ID
-            templateParams
-        );
+        console.log('Sending email with params:', templateParams);
+        
+        // Replace these with your actual EmailJS credentials
+        const serviceID = 'service_c3ur38h'; // Your EmailJS Service ID
+        const templateID = 'template_8q6d3em'; // Your EmailJS Template ID
+        
+        const response = await emailjs.send(serviceID, templateID, templateParams);
         
         console.log('Email sent successfully:', response);
         return response;
     } catch (error) {
         console.error('Email sending failed:', error);
         
-        // Provide more specific error messages
-        if (error.text && error.text.includes('Template not found')) {
-            throw new Error('Email template not found. Please check your template ID.');
-        } else if (error.text && error.text.includes('Service not found')) {
-            throw new Error('Email service not found. Please check your service ID.');
+        // Provide specific error messages
+        let errorMessage = 'Failed to send email. ';
+        
+        if (error.status === 400) {
+            errorMessage += 'Invalid EmailJS configuration. Please check your Service ID and Template ID.';
+        } else if (error.status === 0) {
+            errorMessage += 'Network error. Please check your internet connection.';
         } else {
-            throw new Error('Failed to send email. Please check your internet connection and try again.');
+            errorMessage += `Error: ${error.text || 'Unknown error'}`;
         }
+        
+        throw new Error(errorMessage);
     }
 },
 
-// Enhanced email sending with fallback
 async sendEmailReport() {
     const recipientInput = document.getElementById('emailRecipient');
     if (!recipientInput) return;
@@ -2022,7 +2035,8 @@ async sendEmailReport() {
         console.error('Failed to send email:', error);
         
         // Offer fallback options
-        if (confirm(`❌ ${error.message}\n\nWould you like to copy the report to clipboard instead?`)) {
+        const fallbackChoice = confirm(`❌ ${error.message}\n\nWould you like to copy the report to clipboard instead?`);
+        if (fallbackChoice) {
             await this.copyReportToClipboard(stats);
         }
     } finally {
@@ -2032,7 +2046,7 @@ async sendEmailReport() {
     }
 },
 
-// Fallback: Copy report to clipboard
+// Fixed clipboard fallback
 async copyReportToClipboard(stats) {
     const reportText = this.formatStatsForTable(stats);
     
@@ -2042,61 +2056,57 @@ async copyReportToClipboard(stats) {
     } catch (clipboardError) {
         console.error('Clipboard failed:', clipboardError);
         
-        // Final fallback: show in alert
-        alert('📋 Report Text:\n\n' + reportText + '\n\nYou can manually copy this text.');
+        // Fallback: create a temporary textarea
+        const textArea = document.createElement('textarea');
+        textArea.value = reportText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            if (successful) {
+                alert('📋 Report copied to clipboard!');
+            } else {
+                throw new Error('Copy command failed');
+            }
+        } catch (execError) {
+            document.body.removeChild(textArea);
+            // Final fallback: show in alert
+            alert('📋 Report Text:\n\n' + reportText + '\n\nYou can manually copy this text.');
+        }
     }
 },
 
-// Enhanced daily stats with better formatting
-async getDailyStats(date) {
-    const dopamineEntry = await db.dopamineEntries.where('date').equals(date).first();
-    const workoutEntry = await db.workoutHistory.where('date').equals(date).first();
-    const hygieneCompletion = await this.calculateHygieneCompletion(date);
-    const moodEntry = await db.moodEntries.where('date').equals(date).first();
-    const focusSessions = await db.focusSessions.where('date').equals(date).toArray();
-
-    // Format status for better display
-    const formatDopamineStatus = (entry) => {
-        if (!entry) return 'Not logged';
-        return entry.status === 'passed' ? '✅ Successful' : '❌ Challenging';
-    };
-
-    const formatWorkoutStatus = (entry) => {
-        if (!entry) return 'Not logged';
-        switch (entry.type) {
-            case 'completed': return '💪 Completed';
-            case 'rest': return '😴 Rest Day';
-            case 'missed': return '❌ Missed';
-            default: return entry.type;
-        }
-    };
-
-    return {
-        date,
-        dopamine: dopamineEntry ? {
-            status: formatDopamineStatus(dopamineEntry),
-            notes: dopamineEntry.notes
-        } : null,
-        workout: workoutEntry ? {
-            type: formatWorkoutStatus(workoutEntry),
-            duration: workoutEntry.duration
-        } : null,
-        hygiene: {
-            completion: hygieneCompletion,
-            totalHabits: (await db.hygieneHabits.toArray()).length
-        },
-        mood: moodEntry ? {
-            mood: moodEntry.mood,
-            energy: moodEntry.energy,
-            numb: moodEntry.numb,
-            notes: moodEntry.notes
-        } : null,
-        focus: {
-            sessions: focusSessions.length,
-            totalDuration: focusSessions.reduce((total, session) => total + session.duration, 0)
-        },
-        overallCompletion: await this.calculateTodayCompletion(date)
-    };
+// Add the missing formatStatsForTable method
+formatStatsForTable(stats) {
+    let table = "Life Tracker Daily Report\n";
+    table += "==========================\n\n";
+    table += `Date: ${stats.date}\n`;
+    table += `Overall Completion: ${stats.overallCompletion}%\n\n`;
+    
+    table += "Daily Metrics:\n";
+    table += "--------------\n";
+    table += `Dopamine Control: ${stats.dopamine ? (stats.dopamine.status === 'passed' ? '✅ Successful' : '❌ Challenging') : 'Not logged'}\n`;
+    table += `Workout: ${stats.workout ? stats.workout.type : 'Not logged'}\n`;
+    table += `Hygiene Completion: ${stats.hygiene.completion}%\n`;
+    
+    if (stats.mood) {
+        table += `Mood Level: ${stats.mood.mood}/5\n`;
+        table += `Energy Level: ${stats.mood.energy}/5\n`;
+        table += `Numbness Level: ${stats.mood.numb}/5\n`;
+    } else {
+        table += "Mood: Not logged\n";
+    }
+    
+    table += `Focus Sessions: ${stats.focus.sessions}\n`;
+    table += `Total Focus Time: ${stats.focus.totalDuration} minutes\n\n`;
+    
+    table += "---\n";
+    table += "Generated by Life Tracker Pro";
+    
+    return table;
 },
 
     // Calculation methods
