@@ -79,6 +79,9 @@ body {
     gap: 10px;
 }
 
+
+
+
 .settings-icon {
     width: 40px;
     height: 40px;
@@ -277,6 +280,389 @@ body {
 .stat-card:active {
     transform: scale(0.95);
 }
+
+.habit-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.habit-item:last-child {
+    border-bottom: none;
+}
+
+.habit-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.habit-item:active::before {
+    left: 100%;
+}
+
+.habit-item:active {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.habit-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: var(--ig-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 15px;
+    font-size: 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.habit-item:active .habit-icon {
+    transform: scale(1.1);
+}
+
+.habit-info {
+    flex: 1;
+}
+
+.habit-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.habit-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.habit-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.habit-check.completed {
+    background: var(--ig-success);
+    border-color: var(--ig-success);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(0, 200, 81, 0.4);
+}
+
+.swipe-completed {
+    opacity: 0.8;
+}
+
+.completion-card {
+    background: linear-gradient(135deg, var(--ig-primary), var(--ig-accent));
+    margin: 20px;
+    padding: 30px 20px;
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.completion-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+}
+
+.completion-value {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.completion-label {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 600;
+    position: relative;
+}
+
+.log-entry {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-entry:active {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.log-date {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.log-status {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+}
+
+.status-passed {
+    background: var(--ig-success);
+    color: white;
+}
+
+.status-failed {
+    background: var(--ig-danger);
+    color: white;
+}
+
+.log-notes {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.log-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.log-action {
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.log-action:active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.9);
+    color: var(--text-primary);
+}
+
+.database-section {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.database-section:last-child {
+    border-bottom: none;
+}
+
+.database-section h3 {
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.database-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.database-table th,
+.database-table td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+}
+
+.database-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.database-table td {
+    color: var(--text-primary);
+}
+
+.database-actions {
+    display: flex;
+    gap: 8px;
+}
+
+
+.workout-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+}
+
+.workout-option {
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+    border: 1px solid transparent;
+    font-weight: 600;
+}
+
+.workout-option.active {
+    background: var(--ig-blue);
+    color: white;
+    border-color: var(--ig-blue);
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 149, 246, 0.4);
+}
+
+.workout-option:active {
+    transform: scale(0.95);
+}
+
+.exercise-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.exercise-card:active {
+    transform: scale(0.98);
+}
+
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.exercise-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.exercise-pr {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.sets-container {
+    space-y: 10px;
+}
+
+.set-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+}
+
+.set-number {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.set-input {
+    display: flex;
+    gap: 15px;
+    flex: 1;
+}
+
+.input-group {
+    flex: 1;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--ig-blue);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+
+
+
+
 
 .stat-value {
     font-size: 28px;
