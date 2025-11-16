@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -48,136 +48,7 @@
 
         <!-- Dashboard Page -->
         <div class="page active" id="dashboard">
-            <div class="welcome-card">
-                <h2>Welcome to Life Tracker Pro!</h2>
-                <p>Your supercharged productivity companion</p>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="currentStreak">0</div>
-                        <div class="stat-label">Day Streak</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="todayCompletion">0%</div>
-                        <div class="stat-label">Today's Progress</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="moodScore">-</div>
-                        <div class="stat-label">Today's Mood</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="focusTime">0m</div>
-                        <div class="stat-label">Focus Time</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Quick Actions</div>
-                </div>
-                <div class="module-card" data-page="dopamine">
-                    <div class="module-icon" style="background: var(--ig-primary);">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <div class="module-info">
-                        <div class="module-title">Dopamine Control</div>
-                        <div class="module-desc">Track your daily progress</div>
-                    </div>
-                    <div class="module-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                
-                <div class="module-card" data-page="hygiene">
-                    <div class="module-icon" style="background: var(--ig-blue);">
-                        <i class="fas fa-shower"></i>
-                    </div>
-                    <div class="module-info">
-                        <div class="module-title">Personal Hygiene</div>
-                        <div class="module-desc">Daily routine tracker</div>
-                    </div>
-                    <div class="module-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                
-                <div class="module-card" data-page="workout">
-                    <div class="module-icon" style="background: var(--success);">
-                        <i class="fas fa-dumbbell"></i>
-                    </div>
-                    <div class="module-info">
-                        <div class="module-title">Workout</div>
-                        <div class="module-desc">Exercise tracking & analytics</div>
-                    </div>
-                    <div class="module-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-
-                <div class="module-card" data-page="mood">
-                    <div class="module-icon" style="background: var(--ig-purple);">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div class="module-info">
-                        <div class="module-title">Mood & Energy</div>
-                        <div class="module-desc">Track how you feel</div>
-                    </div>
-                    <div class="module-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-
-                <div class="module-card" data-page="analytics">
-                    <div class="module-icon" style="background: var(--ig-orange);">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="module-info">
-                        <div class="module-title">Analytics</div>
-                        <div class="module-desc">Data visualization & insights</div>
-                    </div>
-                    <div class="module-arrow">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Mood Log -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Quick Mood Check</div>
-                </div>
-                <div class="mood-quick-actions">
-                    <div class="mood-btn" data-mood="5" data-energy="5" data-numb="1">
-                        <div class="mood-emoji">😊</div>
-                        <div class="mood-label">Great</div>
-                    </div>
-                    <div class="mood-btn" data-mood="4" data-energy="4" data-numb="2">
-                        <div class="mood-emoji">😄</div>
-                        <div class="mood-label">Good</div>
-                    </div>
-                    <div class="mood-btn" data-mood="3" data-energy="3" data-numb="3">
-                        <div class="mood-emoji">😐</div>
-                        <div class="mood-label">Okay</div>
-                    </div>
-                    <div class="mood-btn" data-mood="2" data-energy="2" data-numb="4">
-                        <div class="mood-emoji">😔</div>
-                        <div class="mood-label">Low</div>
-                    </div>
-                    <div class="mood-btn" data-mood="1" data-energy="1" data-numb="5">
-                        <div class="mood-emoji">😢</div>
-                        <div class="mood-label">Poor</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">This Week</div>
-                </div>
-                <div class="calendar-container" id="dashboardCalendar">
-                    <!-- Calendar will be populated by JavaScript -->
-                </div>
-            </div>
+            <!-- Content will be populated by JavaScript -->
         </div>
 
         <!-- Dopamine Tracker Page -->
@@ -244,9 +115,114 @@
             </div>
         </div>
 
-        <!-- Existing Modals... -->
+        <!-- Dopamine Modal -->
+        <div class="modal" id="dopamineModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Log Dopamine Status</div>
+                    <div class="modal-close" id="closeDopamineModal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="dopamineDate">Date</label>
+                        <input type="date" id="dopamineDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="dopamineStatus">Status</label>
+                        <select id="dopamineStatus" class="form-control">
+                            <option value="passed">Successful Day</option>
+                            <option value="failed">Challenging Day</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dopamineNotes">Notes (Optional)</label>
+                        <textarea id="dopamineNotes" class="form-control" placeholder="Add any notes about your day..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="cancelDopamineLog">Cancel</button>
+                        <button class="btn btn-primary" id="saveDopamineLog">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- New Mood Modal -->
+        <!-- Habit Modal -->
+        <div class="modal" id="habitModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Add New Habit</div>
+                    <div class="modal-close" id="closeHabitModal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="habitName">Habit Name</label>
+                        <input type="text" id="habitName" class="form-control" placeholder="e.g., Skincare routine">
+                    </div>
+                    <div class="form-group">
+                        <label for="habitDescription">Description (Optional)</label>
+                        <input type="text" id="habitDescription" class="form-control" placeholder="e.g., Morning and evening routine">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="cancelHabit">Cancel</button>
+                        <button class="btn btn-primary" id="saveHabit">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workout Modal -->
+        <div class="modal" id="workoutModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Add New Workout</div>
+                    <div class="modal-close" id="closeWorkoutModal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="workoutName">Workout Name</label>
+                        <input type="text" id="workoutName" class="form-control" placeholder="e.g., Leg Day">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="cancelWorkout">Cancel</button>
+                        <button class="btn btn-primary" id="saveWorkout">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise Modal -->
+        <div class="modal" id="exerciseModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Add Exercise</div>
+                    <div class="modal-close" id="closeExerciseModal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exerciseName">Exercise Name</label>
+                        <input type="text" id="exerciseName" class="form-control" placeholder="e.g., Bench Press">
+                    </div>
+                    <div class="form-group">
+                        <label for="exercisePR">Personal Record (Optional)</label>
+                        <input type="text" id="exercisePR" class="form-control" placeholder="e.g., 185 lbs">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="cancelExercise">Cancel</button>
+                        <button class="btn btn-primary" id="saveExercise">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mood Modal -->
         <div class="modal" id="moodModal">
             <div class="modal-content">
                 <div class="modal-header">
